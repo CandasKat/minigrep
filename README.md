@@ -1,1 +1,1 @@
-https://github.com/candaskat/minigrep/actions/workflows/WORKFLOW-FILE/badge.svg
+https://github.com/candaskat/minigrep/actions/workflows/rust.yml/badge.svg
