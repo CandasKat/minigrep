@@ -1,10 +1,34 @@
+use std::fs;
+
 pub fn search_in_file(filename: &str, query: &str) -> bool {
-    false
+    if let Ok(contents) = fs::read_to_string(filename) {
+        contents.contains(query)
+    } else {
+        false
+    }
 }
 
 pub fn handle_args(args: &[String]) -> String {
-    String::from("")
+    if args.len() < 3 {
+        String::from("Not enough arguments")
+    }
+    else if args.len() > 3 {
+        String::from("Too many arguments")
+    }
+    else {
+        let filename = &args[1];
+        let query = &args[2];
+
+        let result = search_in_file(filename, query);
+
+        if result {
+            format!("'{}' found in {}", query, filename)
+        } else {
+            format!("'{}' not found in {}", query, filename)
+        }
+    }
 }
+
 
 
 #[cfg(test)]
