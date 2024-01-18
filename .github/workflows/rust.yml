@@ -2,9 +2,9 @@ name: test
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master" ,"exo1"]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master","exo1" ]
 
 env:
   CARGO_TERM_COLOR: always
