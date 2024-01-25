@@ -2,7 +2,7 @@ use std::fs;
 
 pub fn search_in_file(filename: &str, query: &str) -> bool {
     if let Ok(contents) = fs::read_to_string(filename) {
-    contents.contains(query)
+        contents.contains(query)
     } else {
         false
     }
