@@ -52,3 +52,27 @@ mod test {
     }
 }
 
+#[cfg(test)]
+mod structural_test {
+    use super::*;
+
+    #[test]
+    fn find_word_in_empty_file() {
+        let filename = "empty.txt";
+        let query = "rust";
+        assert_eq!(search_in_file(filename, query), Ok(false));
+    }
+
+    #[test]
+    fn find_word_in_nonexistent_file() {
+        let filename = "nonexistent.txt";
+        let query = "rust";
+        assert!(matches!(search_in_file(filename, query), Err(_)));
+    }
+
+    #[test]
+    fn handle_args_with_insufficient_args() {
+        let args = vec![String::from("minigrep")];
+        assert!(matches!(handle_args(&args), Err(_)));
+    }
+}
