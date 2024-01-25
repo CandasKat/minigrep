@@ -1,23 +1,23 @@
 use std::fs;
 
-pub fn search_in_file(filename: &str, query: &str) -> bool {
-    if let Ok(contents) = fs::read_to_string(filename) {
-    contents.contains(query)
-    } else {
-        false
+pub fn search_in_file(filename: &str, query: &str) -> Result<bool, &'static str> {
+    match fs::read_to_string(filename) {
+        Ok(contents) => Ok(contents.contains(query)),
+        Err(_) => Err("Error reading file"),
     }
-
 }
 
-pub fn handle_args(args: &[String]) -> String {
+pub fn handle_args(args: &[String]) -> Result<String, &'static str> {
+    if args.len() < 3 {
+        return Err("Not enough arguments provided");
+    }
     let filename = &args[1];
     let query = &args[2];
 
-    let result = search_in_file(filename, query);
-    if result {
-        format!("'{}' found in {}", query, filename)
-    } else {
-        format!("'{}' not found in {}", query, filename)
+    match search_in_file(filename, query) {
+        Ok(true) => Ok(format!("'{}' found in {}", query, filename)),
+        Ok(false) => Ok(format!("'{}' not found in {}", query, filename)),
+        Err(e) => Err(e),
     }
 }
 
