@@ -28,28 +28,29 @@ mod test {
     #[test]
     fn handle_args_with_valid_args_find_words() {
         let args = vec![String::from("minigrep"), String::from("test.txt"), String::from("rust")];
-        assert_eq!(handle_args(&args), "'rust' found in test.txt");
+        assert_eq!(handle_args(&args), Ok(String::from("'rust' found in test.txt")));
     }
 
     #[test]
     fn handle_args_with_valid_args_not_find_words() {
         let args = vec![String::from("minigrep"), String::from("test.txt"), String::from("Python")];
-        assert_eq!(handle_args(&args), "'Python' not found in test.txt");
+        assert_eq!(handle_args(&args), Ok(String::from("'Python' not found in test.txt")));
     }
 
     #[test]
     fn find_word_in_file() {
         let filename = "test.txt";
         let query = "rust";
-        assert!(search_in_file(filename, query));
+        assert_eq!(search_in_file(filename, query), Ok(true));
     }
 
     #[test]
     fn not_find_word_in_file() {
         let filename = "test.txt";
         let query = "python";
-        assert!(!search_in_file(filename, query));
+        assert_eq!(search_in_file(filename, query), Ok(false));
     }
+
 }
 
 #[cfg(test)]
@@ -60,14 +61,14 @@ mod structural_test {
     fn find_word_in_empty_file() {
         let filename = "empty.txt";
         let query = "rust";
-        assert!(!search_in_file(filename, query));
+        assert_eq!(search_in_file(filename, query), Ok(false));
     }
 
     #[test]
     fn find_word_in_nonexistent_file() {
         let filename = "nonexistent.txt";
         let query = "rust";
-        assert!(!search_in_file(filename, query));
+        assert!(matches!(search_in_file(filename, query), Err(_)));
     }
 
     #[test]
