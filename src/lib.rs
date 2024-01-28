@@ -16,8 +16,9 @@ pub fn handle_args(args: &[String]) -> String {
     let result = search_in_file(filename, query);
     if result {
         return format!("'{}' found in {}", query, filename)
+    } else {
+        return format!("'{}' not found in {}", query, filename)
     }
-    return format!("");
 }
 
 #[cfg(test)]
