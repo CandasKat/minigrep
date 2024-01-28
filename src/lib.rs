@@ -1,12 +1,23 @@
 use std::fs;
 
-pub fn search_in_file(filename: &str, query: &str) -> bool {
-    if let Ok(contents) = fs::read_to_string(filename) {
-        // Vérifier si le fichier est vide avant de chercher la requête
-        !contents.is_empty() && contents.contains(query)
-    } else {
-        // Retourner false si le fichier ne peut pas être lu (par exemple, s'il n'existe pas)
-        false
+pub enum SearchResult {
+    Found,
+    NotFound,
+    FileEmpty,
+    FileReadError,
+}
+pub fn search_in_file(filename: &str, query: &str) -> SearchResult {
+    match fs::read_to_string(filename) {
+        Ok(contents) => {
+            if contents.is_empty() {
+                SearchResult::FileEmpty
+            } else if contents.contains(query) {
+                SearchResult::Found
+            } else {
+                SearchResult::NotFound
+            }
+        }
+        Err(_) => SearchResult::FileReadError,
     }
 }
 
@@ -29,16 +40,18 @@ fn parse_args(args: &[String]) -> Result<Arguments, String> {
 
 // La fonction handle_args se concentre maintenant uniquement sur l'exécution de la recherche
 pub fn handle_args(args: &[String]) -> String {
-    match parse_args(args) {
-        Ok(arguments) => {
-            let result = search_in_file(&arguments.filename, &arguments.query);
-            if result {
-                format!("'{}' found in {}", arguments.query, arguments.filename)
-            } else {
-                format!("'{}' not found in {}", arguments.query, arguments.filename)
-            }
-        }
-        Err(e) => e,
+    if args.len() != 3 {
+        return "Usage: minigrep <filename> <query>".to_string();
+    }
+
+    let filename = &args[1];
+    let query = &args[2];
+
+    match search_in_file(filename, query) {
+        SearchResult::Found => format!("'{}' found in {}", query, filename),
+        SearchResult::NotFound => format!("'{}' not found in {}", query, filename),
+        SearchResult::FileEmpty => format!("File '{}' is empty", filename),
+        SearchResult::FileReadError => format!("Error reading file '{}'", filename),
     }
 }
 
