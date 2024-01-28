@@ -2,11 +2,12 @@ use std::fs;
 
 pub fn search_in_file(filename: &str, query: &str) -> bool {
     if let Ok(contents) = fs::read_to_string(filename) {
-        contents.contains(query)
+        // Vérifier si le fichier est vide avant de chercher la requête
+        !contents.is_empty() && contents.contains(query)
     } else {
+        // Retourner false si le fichier ne peut pas être lu (par exemple, s'il n'existe pas)
         false
     }
-
 }
 
 // Définition d'une structure pour les arguments
