@@ -76,7 +76,12 @@ mod test {
 mod structural_test {
     use super::*;
 
-
+    #[test]
+    fn test_empty_file() {
+        let filename = "empty.txt"; // Make sure this file exists and is empty
+        let query = "rust";
+        assert!(!search_in_file(filename, query), "Expected false for an empty file, but got true");
+    }
 
     #[test]
     fn test_argument_count_validation() {
