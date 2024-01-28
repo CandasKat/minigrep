@@ -41,7 +41,6 @@ pub fn handle_args(args: &[String]) -> String {
     }
 }
 
-
 #[cfg(test)]
 mod test {
     use super::*;
@@ -87,5 +86,4 @@ mod structural_test {
         let excessive_args = vec![String::from("minigrep"), String::from("test.txt"), String::from("rust"), String::from("extra")];
         assert_eq!(handle_args(&excessive_args), "Usage: minigrep <filename> <query>", "Expected usage message for excessive arguments");
     }
-
 }
