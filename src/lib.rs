@@ -1,12 +1,21 @@
 use std::fs;
 
 pub fn search_in_file(filename: &str, query: &str) -> bool {
-    if let Ok(contents) = fs::read_to_string(filename) {
-        // Vérifier si le fichier est vide avant de chercher la requête
-        !contents.is_empty() && contents.contains(query)
-    } else {
-        // Retourner false si le fichier ne peut pas être lu (par exemple, s'il n'existe pas)
-        false
+    // Tente de lire le contenu du fichier
+    match fs::read_to_string(filename) {
+        // Si la lecture réussit, procède avec le contenu
+        Ok(contents) => {
+            // Vérifie si le contenu est vide
+            if contents.is_empty() {
+                // Retourne false si le fichier est vide car la requête ne peut pas y être trouvée
+                false
+            } else {
+                // Recherche la requête dans le contenu du fichier
+                contents.contains(query)
+            }
+        }
+        // Retourne false si la lecture du fichier échoue (fichier non trouvé, erreur de lecture, etc.)
+        Err(_) => false,
     }
 }
 
