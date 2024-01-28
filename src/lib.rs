@@ -1,23 +1,21 @@
 use std::fs;
 
-pub enum SearchResult {
-    Found,
-    NotFound,
-    FileEmpty,
-    FileReadError,
-}
-pub fn search_in_file(filename: &str, query: &str) -> SearchResult {
+pub fn search_in_file(filename: &str, query: &str) -> bool {
+    // Tente de lire le contenu du fichier
     match fs::read_to_string(filename) {
+        // Si la lecture réussit, procède avec le contenu
         Ok(contents) => {
+            // Vérifie si le contenu est vide
             if contents.is_empty() {
-                SearchResult::FileEmpty
-            } else if contents.contains(query) {
-                SearchResult::Found
+                // Retourne false si le fichier est vide car la requête ne peut pas y être trouvée
+                false
             } else {
-                SearchResult::NotFound
+                // Recherche la requête dans le contenu du fichier
+                contents.contains(query)
             }
         }
-        Err(_) => SearchResult::FileReadError,
+        // Retourne false si la lecture du fichier échoue (fichier non trouvé, erreur de lecture, etc.)
+        Err(_) => false,
     }
 }
 
@@ -40,18 +38,16 @@ fn parse_args(args: &[String]) -> Result<Arguments, String> {
 
 // La fonction handle_args se concentre maintenant uniquement sur l'exécution de la recherche
 pub fn handle_args(args: &[String]) -> String {
-    if args.len() != 3 {
-        return "Usage: minigrep <filename> <query>".to_string();
-    }
-
-    let filename = &args[1];
-    let query = &args[2];
-
-    match search_in_file(filename, query) {
-        SearchResult::Found => format!("'{}' found in {}", query, filename),
-        SearchResult::NotFound => format!("'{}' not found in {}", query, filename),
-        SearchResult::FileEmpty => format!("File '{}' is empty", filename),
-        SearchResult::FileReadError => format!("Error reading file '{}'", filename),
+    match parse_args(args) {
+        Ok(arguments) => {
+            let result = search_in_file(&arguments.filename, &arguments.query);
+            if result {
+                format!("'{}' found in {}", arguments.query, arguments.filename)
+            } else {
+                format!("'{}' not found in {}", arguments.query, arguments.filename)
+            }
+        }
+        Err(e) => e,
     }
 }
 
@@ -92,14 +88,9 @@ mod structural_test {
 
     #[test]
     fn test_empty_file() {
-        let filename = "empty.txt"; // Assurez-vous que ce fichier existe et est vide
+        let filename = "empty.txt"; // Make sure this file exists and is empty
         let query = "rust";
-
-        // Utilisez une correspondance de modèle pour vérifier le résultat
-        match search_in_file(filename, query) {
-            SearchResult::FileEmpty => (), // Le test réussit si le fichier est vide
-            _ => panic!("Expected SearchResult::FileEmpty for an empty file, but got a different result"),
-        }
+        assert!(!search_in_file(filename, query), "Expected false for an empty file, but got true");
     }
 
     #[test]
