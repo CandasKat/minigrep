@@ -92,9 +92,14 @@ mod structural_test {
 
     #[test]
     fn test_empty_file() {
-        let filename = "empty.txt"; // Make sure this file exists and is empty
+        let filename = "empty.txt"; // Assurez-vous que ce fichier existe et est vide
         let query = "rust";
-        assert!(!search_in_file(filename, query), "Expected false for an empty file, but got true");
+
+        // Utilisez une correspondance de modèle pour vérifier le résultat
+        match search_in_file(filename, query) {
+            SearchResult::FileEmpty => (), // Le test réussit si le fichier est vide
+            _ => panic!("Expected SearchResult::FileEmpty for an empty file, but got a different result"),
+        }
     }
 
     #[test]
