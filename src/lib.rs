@@ -1,12 +1,12 @@
 use std::fs;
 
-pub fn search_in_file(filename: &str, query: &str) -> String {
+pub fn search_in_file(filename: &str, query: &str) -> bool {
     if let Ok(contents) = fs::read_to_string(filename) {
         if contents.contains(query) {
-            return format!("'{}' found in {}", query, filename)
+            return true;
         }
     }
-    return format!("");
+    return false;
 }
 #[cfg(test)]
 mod test{
@@ -16,6 +16,6 @@ mod test{
     fn find_word_in_file() {
         let filename = "test.txt";
         let query = "rust";
-        assert_eq!(search_in_file(filename, query), "'rust' found in test.txt");
+        assert!(search_in_file(filename, query));
     }
 }
