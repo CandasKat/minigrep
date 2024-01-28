@@ -10,7 +10,10 @@ pub fn search_in_file(filename: &str, query: &str) -> bool {
 }
 
 pub fn handle_args(args: &[String]) -> String {
-    format!("")
+    if search_in_file(&args[1], &args[2]) {
+        return format!("'{}' found in {}", &args[2], &args[1]);
+    }
+    return format!("");
 }
 
 #[cfg(test)]
