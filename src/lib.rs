@@ -5,7 +5,7 @@ pub fn search_in_file(filename: &str, query: &str) -> bool {
     match fs::read_to_string(filename) {
         // Si la lecture réussit, procède avec le contenu
         Ok(contents) => {
-            // Vérifie si le contenu est vide
+
             if contents.is_empty() {
                 // Retourne false si le fichier est vide car la requête ne peut pas y être trouvée
                 false
