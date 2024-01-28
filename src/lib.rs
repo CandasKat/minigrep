@@ -2,11 +2,11 @@ use std::fs;
 
 pub fn search_in_file(filename: &str, query: &str) -> bool {
     if let Ok(contents) = fs::read_to_string(filename) {
-        if contents.contains(query) {
-            return true;
-        }
+        contents.contains(query)
+    } else {
+        false
     }
-    return false;
+
 }
 
 pub fn handle_args(args: &[String]) -> String {
@@ -15,18 +15,18 @@ pub fn handle_args(args: &[String]) -> String {
 
     let result = search_in_file(filename, query);
     if result {
-        return format!("'{}' found in {}", query, filename)
+        format!("'{}' found in {}", query, filename)
     } else {
-        return format!("'{}' not found in {}", query, filename)
+        format!("'{}' not found in {}", query, filename)
     }
 }
 
 #[cfg(test)]
-mod test{
+mod test {
     use super::*;
 
     #[test]
-    fn handle_args_with_valid_args() {
+    fn handle_args_with_valid_args_find_words() {
         let args = vec![String::from("minigrep"), String::from("test.txt"), String::from("rust")];
         assert_eq!(handle_args(&args), "'rust' found in test.txt");
     }
@@ -44,5 +44,10 @@ mod test{
         assert!(search_in_file(filename, query));
     }
 
-
+    #[test]
+    fn not_find_word_in_file() {
+        let filename = "test.txt";
+        let query = "python";
+        assert!(!search_in_file(filename, query));
+    }
 }
