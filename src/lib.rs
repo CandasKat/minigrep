@@ -10,7 +10,9 @@ pub fn search_in_file(filename: &str, query: &str) -> bool {
 }
 
 pub fn handle_args(args: &[String]) -> String {
-
+    if args.len() != 3 {
+        return "Usage: minigrep <filename> <query>".to_string();
+    }
     
     let filename = &args[1];
     let query = &args[2];
