@@ -101,4 +101,11 @@ mod structural_test {
         let excessive_args = vec![String::from("minigrep"), String::from("test.txt"), String::from("rust"), String::from("extra")];
         assert_eq!(handle_args(&excessive_args), "Usage: minigrep <filename> <query>", "Expected usage message for excessive arguments");
     }
+
+    #[test]
+    fn test_file_nonexistent() {
+        let filename = "nonexistent.txt";
+        let query = "rust";
+        assert_eq!(search_in_file(filename, query), false, "Expected false for nonexistent file");
+    }
 }
