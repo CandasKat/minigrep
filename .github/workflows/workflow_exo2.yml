@@ -1,10 +1,10 @@
-name: test_master
+name: test_exo2
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "exo2" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "exo2" ]
 
 env:
   CARGO_TERM_COLOR: always
