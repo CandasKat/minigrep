@@ -9,21 +9,38 @@ pub fn search_in_file(filename: &str, query: &str) -> bool {
 
 }
 
-pub fn handle_args(args: &[String]) -> String {
-    if args.len() != 3 {
-        return "Usage: minigrep <filename> <query>".to_string();
-    }
-    
-    let filename = &args[1];
-    let query = &args[2];
+// Définition d'une structure pour les arguments
+struct Arguments {
+    filename: String,
+    query: String,
+}
 
-    let result = search_in_file(filename, query);
-    if result {
-        format!("'{}' found in {}", query, filename)
-    } else {
-        format!("'{}' not found in {}", query, filename)
+// Fonction pour analyser et valider les arguments
+fn parse_args(args: &[String]) -> Result<Arguments, String> {
+    if args.len() != 3 {
+        return Err("Usage: minigrep <filename> <query>".to_string());
+    }
+    Ok(Arguments {
+        filename: args[1].clone(),
+        query: args[2].clone(),
+    })
+}
+
+// La fonction handle_args se concentre maintenant uniquement sur l'exécution de la recherche
+pub fn handle_args(args: &[String]) -> String {
+    match parse_args(args) {
+        Ok(arguments) => {
+            let result = search_in_file(&arguments.filename, &arguments.query);
+            if result {
+                format!("'{}' found in {}", arguments.query, arguments.filename)
+            } else {
+                format!("'{}' not found in {}", arguments.query, arguments.filename)
+            }
+        }
+        Err(e) => e,
     }
 }
+
 
 #[cfg(test)]
 mod test {
